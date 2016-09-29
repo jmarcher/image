@@ -24,6 +24,8 @@ abstract class AbstractFont
      * @var mixed
      */
     public $color = '000000';
+    
+    public $spacing = 0;
 
     /**
      * Rotation angle of the text
@@ -103,6 +105,16 @@ abstract class AbstractFont
     public function size($size)
     {
         $this->size = $size;
+    }
+    
+    public function spacing($spacing)
+    {
+        $this->spacing = $spacing;
+    }
+    
+    public function getSpacing()
+    {
+        return $this->spacing;
     }
 
     /**
