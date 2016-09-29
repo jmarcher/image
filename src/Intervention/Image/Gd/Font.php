@@ -119,6 +119,26 @@ class Font extends \Intervention\Image\AbstractFont
 
         return $box;
     }
+    
+    public function imagettftextSp(&$image, $size, $angle, $x, $y, $color, $font, $text, $spacing = 0)
+    {        
+        if ($spacing == 0)
+        {
+            imagettftext($image, $size, $angle, $x, $y, $color, $font, $text);
+        }
+        else
+        {
+            $temp_x = $x;
+            $temp_y = $y;
+            for ($i = 0; $i < strlen($text); $i++)
+            {
+                imagettftext($image, $size, $angle, $temp_x, $temp_y, $color, $font, $text[$i]);
+                $bbox = imagettfbbox($size, 0, $font, $text[$i]);
+                $temp_x += cos(deg2rad($angle)) * ($spacing + ($bbox[2] - $bbox[0]));
+                $temp_y -= sin(deg2rad($angle)) * ($spacing + ($bbox[2] - $bbox[0]));
+            }
+        }
+    }
 
     /**
      * Draws font to given image at given position
@@ -199,8 +219,7 @@ class Font extends \Intervention\Image\AbstractFont
             imagealphablending($image->getCore(), true);
 
             // draw ttf text
-            imagettftext($image->getCore(), $this->getPointSize(), $this->angle, $posx, $posy, $color->getInt(), $this->file, $this->text);
-
+            $this->imagettftextSp($image->getCore(), $this->getPointSize(), $this->angle, $posx, $posy, $color->getInt(), $this->file, $this->text, $this->spacing);
         } else {
 
             // get box size
